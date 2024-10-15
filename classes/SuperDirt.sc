@@ -326,6 +326,27 @@ SuperDirt {
 		);
 
 		netResponders.add(
+			OSCFunc({ |msg, time|
+				var name = msg[1].asSymbol;
+				this.soundLibrary.addSynth(name, (playInside: { |e|
+		                	var args = [
+		                		bufnum: ~buffer,
+		                		sustain: ~sustain,
+		                		speed: ~speed,
+		                		freq: ~freq,
+		                		endSpeed: ~endSpeed,
+		                		begin: ~begin,
+		                		end: ~end,
+		                		pan: ~pan,
+		                		out: ~out
+		                	];
+				e.sendSynth(name, args);
+				}));
+				"Added synth %".format(name).postln;
+			}, "/dirt/add_synth", senderAddr, recvPort: port).fix
+		);
+
+		netResponders.add(
 			// pairs of parameter names and values in arbitrary order
 			OSCFunc(playFunc, "/dirt/play", senderAddr, recvPort: port).fix
 		);
